@@ -3,7 +3,7 @@ import * as hdkey from 'hdkey';
 import * as createHash from 'create-hash';
 import * as bs58check from 'bs58check';
 import React, { useState } from 'react';
-
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 
@@ -18,6 +18,9 @@ export default function Home() {
   const [ethPrivateKey, setEthPrivateKey] = useState();
   const [ethPublicKey, setEthPublicKey] = useState();
   const [ethMnemonic, setEthMnemonic] = useState();
+
+  const [value, setValue] = useState();
+  const [copied, setCopied] = useState(false);
 
   const bitcoinWallet = async () => {
     const mnemonic = bip39.generateMnemonic()
@@ -69,19 +72,31 @@ export default function Home() {
         </button>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>Wallet:</span>
-          <span className='w-full break-words'>{btcWallet}</span>
+          <CopyToClipboard text={btcWallet}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{btcWallet}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>Mnemonic:</span>
-          <span className='w-full break-words'>{btcMnemonic}</span>
+          <CopyToClipboard text={btcMnemonic}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{btcMnemonic}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>PrivateKey:</span>
-          <span className='w-full break-words'>{btcPrivateKey}</span>
+          <CopyToClipboard text={btcPrivateKey}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{btcPrivateKey}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>PulicKey:</span>
-          <span className='w-full break-words'>{btcPublicKey}</span>
+          <CopyToClipboard text={btcPublicKey}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{btcPublicKey}</span>
+          </CopyToClipboard>
         </div>
       </div>
 
@@ -92,19 +107,31 @@ export default function Home() {
         </button>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>Wallet:</span>
-          <span className='w-full break-words'>{ethWallet}</span>
+          <CopyToClipboard text={ethWallet}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{ethWallet}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>Mnemonic:</span>
-          <span className='w-full break-words'>{ethMnemonic}</span>
+          <CopyToClipboard text={ethMnemonic}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{ethMnemonic}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>PrivateKey:</span>
-          <span className='w-full break-words'>{ethPrivateKey}</span>
+          <CopyToClipboard text={ethPrivateKey}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{ethPrivateKey}</span>
+          </CopyToClipboard>
         </div>
         <div className='flex flex-col gap-y-3 justify-start items-start'>
           <span className='text-lg font-semibold'>PulicKey:</span>
-          <span className='w-full break-words'>{ethPublicKey}</span>
+          <CopyToClipboard text={ethPublicKey}
+            onCopy={() => { setCopied(true) }}>
+            <span className='w-full break-words cursor-pointer'>{ethPublicKey}</span>
+          </CopyToClipboard>
         </div>
       </div>
     </section>
