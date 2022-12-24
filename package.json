@@ -17,7 +17,9 @@
     "react": "17.0.2",
     "react-copy-to-clipboard": "^5.1.0",
     "react-csv": "^2.2.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-spinners": "^0.13.7",
+    "react-toastify": "^9.1.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.1",
