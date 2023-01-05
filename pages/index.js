@@ -9,10 +9,13 @@ import { GridLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const CryptoAccount = require("send-crypto");
+
 const btcFileName = "BTCWallets";
 const ethFileName = "ETHWallets";
 
 export default function Home() {
+
 
   const [loading, setLoading] = useState(false)
   const [btcWallet, setBtcWallet] = useState();
@@ -37,32 +40,13 @@ export default function Home() {
   const bitcoinWallet = async () => {
     try {
       setLoading(true)
-      const mnemonic = bip39.generateMnemonic()
-      //const mnemonic = "gentle mutual speak consider mandate kingdom cash explain soul exile cabin squeeze";
-      setBtcMnemonic(mnemonic);
-      const seed = await bip39.mnemonicToSeed(mnemonic); //creates seed buffer
-      console.log('Seed: ' + seed);
-      console.log('mnemonic: ' + mnemonic);
-
-      const root = hdkey.fromMasterSeed(seed);
-      const masterPrivateKey = root.privateKey.toString('hex');
-      setBtcPrivateKey(masterPrivateKey);
-      console.log('masterPrivateKey: ' + masterPrivateKey);
-
-      const addrnode = root.derive("m/44'/0'/0'/0/0");
-      setBtcPublicKey(addrnode._publicKey)
-      console.log('addrnodePublicKey: ' + addrnode._publicKey)
-
-      const step1 = addrnode._publicKey;
-      const step2 = createHash('sha256').update(step1).digest();
-      const step3 = createHash('rmd160').update(step2).digest();
-
-      var step4 = Buffer.allocUnsafe(21);
-      step4.writeUInt8(0x00, 0);
-      step3.copy(step4, 1); //step4 now holds the extended RIPMD-160 result
-      const step9 = bs58check.encode(step4);
-      setBtcWallet(step9);
-      console.log('Base58Check: ' + step9);
+      const privateKey = CryptoAccount.newPrivateKey();
+      const account = new CryptoAccount(privateKey);
+      setBtcPrivateKey(privateKey);
+      console.log('privateKey: ' + privateKey);
+      const walletAddress = await account.address("BTC");
+      setBtcWallet(walletAddress);
+      console.log('wallet: ' + walletAddress);
       setLoading(false)
     } catch (err) {
       setLoading(false)
@@ -110,22 +94,14 @@ export default function Home() {
     try {
       setLoading(true)
       var btcWalletList = [];
-      const headers = ['Wallet, Mnemonic, PrivateKey, PulicKey'];
+      const headers = ['Wallet, PrivateKey'];
       for (let i = 0; i < btcAmount; i++) {
-        const mnemonic = bip39.generateMnemonic()
-        const seed = await bip39.mnemonicToSeed(mnemonic); //creates seed buffer
-        const root = hdkey.fromMasterSeed(seed);
-        const masterPrivateKey = root.privateKey.toString('hex');
-        const addrnode = root.derive("m/44'/0'/0'/0/0");
-        const step1 = addrnode._publicKey;
-        const step2 = createHash('sha256').update(step1).digest();
-        const step3 = createHash('rmd160').update(step2).digest();
-        var step4 = Buffer.allocUnsafe(21);
-        step4.writeUInt8(0x00, 0);
-        step3.copy(step4, 1); //step4 now holds the extended RIPMD-160 result
-        const step9 = bs58check.encode(step4);
+        const privateKey = CryptoAccount.newPrivateKey();
+        const account = new CryptoAccount(privateKey);
+        console.log('privateKey: ' + privateKey);
+        const walletAddress = await account.address("BTC");
 
-        btcWalletList.push([step9, mnemonic, masterPrivateKey, addrnode.publicKey].join(','));
+        btcWalletList.push([walletAddress, privateKey].join(','));
       }
       console.log("====>", btcWalletList);
 
@@ -184,24 +160,10 @@ export default function Home() {
             </CopyToClipboard>
           </div>
           <div className='flex flex-col gap-y-3 justify-start items-start'>
-            <span className='text-lg font-semibold'>Mnemonic:</span>
-            <CopyToClipboard text={btcMnemonic}
-              onCopy={() => { setCopied(true) }}>
-              <span className='w-full break-words cursor-pointer'>{btcMnemonic}</span>
-            </CopyToClipboard>
-          </div>
-          <div className='flex flex-col gap-y-3 justify-start items-start'>
             <span className='text-lg font-semibold'>PrivateKey:</span>
             <CopyToClipboard text={btcPrivateKey}
               onCopy={() => { setCopied(true) }}>
               <span className='w-full break-words cursor-pointer'>{btcPrivateKey}</span>
-            </CopyToClipboard>
-          </div>
-          <div className='flex flex-col gap-y-3 justify-start items-start'>
-            <span className='text-lg font-semibold'>PulicKey:</span>
-            <CopyToClipboard text={btcPublicKey}
-              onCopy={() => { setCopied(true) }}>
-              <span className='w-full break-words cursor-pointer'>{btcPublicKey}</span>
             </CopyToClipboard>
           </div>
         </div>
